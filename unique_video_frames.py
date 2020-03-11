@@ -1,41 +1,51 @@
-#importing the libraries
+#Importing the Libraries
+from skimage.measure import compare_ssim
+import cv2
+import os
 
-import cv2 
-import os 
-import shutil
-import numpy as np
-  
-# Read the video from specified path 
-cam = cv2.VideoCapture("C:\\Users\\pbalu\\Downloads\\task\\Timelapse_Welland_Canal_Bow_Forward_Far.mp4") 
 
 try: 
-      
-    # creating a folder named data 
-    if not os.path.exists('data'): 
-        os.makedirs('data') 
-  
-# if not created then raise error 
-except OSError: 
-    print ('Error: Creating directory of data') 
+    try:  
+        if not os.path.exists('data'): 
+            os.makedirs('data') 
+    except OSError: 
+        print ('Error: Creating directory of data') 
+    vidcap = cv2.VideoCapture("C://Users//pbalu//Videos//Timelapse_Welland_Canal_Bow_Forward_Far.mp4")
+    success, image = vidcap.read()
+    count = 0
+    c = 0
+    i1 = c
+    i2 = c+1
+    success = True
+    while success:
+        success,image = vidcap.read()
+        if success == True:
+            print('Read a new frame: ' + str(success) + ' : ' + str(count))
+            cv2.imwrite("./data/frame "+str(count)+" .PNG", image)
+            count+=1
+        else:
+            print('End of reading frames')
+    while (count>0):
+        imageA = cv2.imread("./data/frame " + str(i1) +" .PNG")
+        imageB = cv2.imread("./data/frame "+str(i2)+" .PNG")
+        resized_orig = cv2.resize(imageA, (300, 200))    
+        resized_mod = cv2.resize(imageB, (300, 200))
+        #gray_orig = cv2.cvtColor(resized_orig, cv2.COLOR_BGR2GRAY)
+        #gray_mod = cv2.cvtColor(resized_mod, cv2.COLOR_BGR2GRAY)
+        (score, diff) = compare_ssim(resized_orig, resized_mod, full=True, multichannel=True) # we can check the score value based on calculating accuracy  
+        if (score > 2): # if they are similar enough, delete one of them
+            i3 = i2
+            i2+=1
+            os.remove("./data/frame "+str(i3) +" .PNG")
+        else:
+            i1 = i2
+            i2+=1
+        count-=1
+except Exception as e: # displays an error message instead of closing the program
+  print(e)
+  input('Press ENTER to exit: ')
 
-
-def getFrame(sec):
-    cam.set(cv2.CAP_PROP_POS_MSEC,sec*1000)
-    hasFrames,image = cam.read()
-    if hasFrames:
-        cv2.imwrite("./data/frame "+str(sec)+" sec.jpg", image)     # save frame as JPG file
-    return hasFrames
-sec = 0
-frameRate = 3.0
-success = getFrame(sec)
-while success:
-    sec = sec + frameRate
-    sec = round(sec, 2)
-    success = getFrame(sec)
-  
-
-  
-# Release all space and windows once done 
-cam.release() 
-cv2.destroyAllWindows() 
-cv2.destroyAllWindows() 
+        
+        
+        
+            
