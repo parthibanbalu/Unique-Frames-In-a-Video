@@ -4,8 +4,8 @@ ALGORITHM:
 
 2. Read the input video through Computer Vision .
 
-3. Analyse the video, compare the objects from different frames, color of the image and different locations.
+3. Resize the Images.
 
-4. Store the extracted unique frames in a seperate folder.
+4. Calculate the score value based on accuracy and check the condition.
 
 5. Release all space and windows once done
