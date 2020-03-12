@@ -33,7 +33,7 @@ try:
         gray_orig = cv2.cvtColor(resized_orig, cv2.COLOR_BGR2GRAY)
         gray_mod = cv2.cvtColor(resized_mod, cv2.COLOR_BGR2GRAY)
         (score, diff) = compare_ssim(gray_orig, gray_mod, full=True, multichannel=True) # we can check the score value based on calculating accuracy  
-        if (score > 2): # if they are similar enough, delete one of them
+        if (score > 10): # if they are similar enough, delete one of them
             i3 = i2
             i2+=1
             os.remove("./data/frame "+str(i3) +" .PNG")
