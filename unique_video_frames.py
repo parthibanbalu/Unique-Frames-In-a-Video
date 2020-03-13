@@ -32,7 +32,7 @@ try:
         gray_orig = cv2.cvtColor(resized_orig, cv2.COLOR_BGR2GRAY)
         gray_mod = cv2.cvtColor(resized_mod, cv2.COLOR_BGR2GRAY)
         (score, diff) = compare_ssim(resized_orig, resized_mod, full = True, multichannel = True )
-        if (score > 0.6): #score values can be selected based on video and also it can be obtained by calculating the accuracy
+        if (score > 0.8): #score values can be selected based on video and also it can be obtained by calculating the accuracy
             img_3 = img_2
             img_2+=1
             os.remove("./data/frame "+str(img_3) +" .jpg") # if they are similar enough, delete one of them
