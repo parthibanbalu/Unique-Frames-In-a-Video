@@ -13,9 +13,8 @@ try:
     vidcap = cv2.VideoCapture("C://Users//pbalu//Videos//Timelapse_Welland_Canal_Bow_Forward_Far.mp4")
     success, image = vidcap.read()
     count = 0
-    c = 0
-    i1 = c
-    i2 = c+1
+    img_1 = 0
+    img_2 = img_1+1
     success = True
     while success:
         success,image = vidcap.read()
@@ -26,20 +25,20 @@ try:
         else:
             print('End of reading frames')
     while (True):
-        imageA = cv2.imread("./data/frame " + str(i1) +" .jpg", cv2.IMREAD_COLOR)
-        imageB = cv2.imread("./data/frame "+str(i2)+" .jpg", cv2.IMREAD_COLOR)
+        imageA = cv2.imread("./data/frame " + str(img_1) +" .jpg", cv2.IMREAD_COLOR)
+        imageB = cv2.imread("./data/frame "+str(img_2)+" .jpg", cv2.IMREAD_COLOR)
         resized_orig = cv2.resize(imageA, (300,200))    
         resized_mod = cv2.resize(imageB, (300,200))
         gray_orig = cv2.cvtColor(resized_orig, cv2.COLOR_BGR2GRAY)
         gray_mod = cv2.cvtColor(resized_mod, cv2.COLOR_BGR2GRAY)
         (score, diff) = compare_ssim(resized_orig, resized_mod, full = True, multichannel = True )
-        if (score > 0.6): #score values can be selected based on video and it can be obtained by calculating the accuracy
-            i3 = i2
-            i2+=1
-            os.remove("./data/frame "+str(i3) +" .jpg") # if they are similar enough, delete one of them
+        if (score > 0.6): #score values can be selected based on video and also it can be obtained by calculating the accuracy
+            img_3 = img_2
+            img_2+=1
+            os.remove("./data/frame "+str(img_3) +" .jpg") # if they are similar enough, delete one of them
         else:
-            i1 = i2
-            i2+=1
+            img_1 = img_2
+            img_2+=1
         count-=1
 except Exception as e: # displays an error message instead of closing the program
   print(e)
