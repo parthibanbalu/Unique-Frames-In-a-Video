@@ -6,7 +6,7 @@ import os
 
 try: 
     try:  
-        if not os.path.exists('data'): 
+        if not os.path.exists('data'):  #create a new directory to save images
             os.makedirs('data') 
     except OSError: 
         print ('Error: Creating directory of data') 
@@ -21,22 +21,22 @@ try:
         success,image = vidcap.read()
         if success == True:
             print('Read a new frame: ' + str(success) + ' : ' + str(count))
-            cv2.imwrite("./data/frame "+str(count)+" .PNG", image)
+            cv2.imwrite("./data/frame "+str(count)+" .jpg", image)
             count+=1
         else:
             print('End of reading frames')
-    while (count>0):
-        imageA = cv2.imread("./data/frame " + str(i1) +" .PNG")
-        imageB = cv2.imread("./data/frame "+str(i2)+" .PNG")
-        resized_orig = cv2.resize(imageA, (300, 200))    
-        resized_mod = cv2.resize(imageB, (300, 200))
-        #gray_orig = cv2.cvtColor(resized_orig, cv2.COLOR_BGR2GRAY)
-        #gray_mod = cv2.cvtColor(resized_mod, cv2.COLOR_BGR2GRAY)
-        (score, diff) = compare_ssim(resized_orig, resized_mod, full=True, multichannel=True) # we can check the score value based on calculating accuracy  
-        if (score > 1): # if they are similar enough, delete one of them
+    while (True):
+        imageA = cv2.imread("./data/frame " + str(i1) +" .jpg", cv2.IMREAD_COLOR)
+        imageB = cv2.imread("./data/frame "+str(i2)+" .jpg", cv2.IMREAD_COLOR)
+        resized_orig = cv2.resize(imageA, (300,200))    
+        resized_mod = cv2.resize(imageB, (300,200))
+        gray_orig = cv2.cvtColor(resized_orig, cv2.COLOR_BGR2GRAY)
+        gray_mod = cv2.cvtColor(resized_mod, cv2.COLOR_BGR2GRAY)
+        (score, diff) = compare_ssim(resized_orig, resized_mod, full = True, multichannel = True )
+        if (score > 0.6): #score values can be selected based on video and it can be obtained by calculating the accuracy
             i3 = i2
             i2+=1
-            os.remove("./data/frame "+str(i3) +" .PNG")
+            os.remove("./data/frame "+str(i3) +" .jpg") # if they are similar enough, delete one of them
         else:
             i1 = i2
             i2+=1
